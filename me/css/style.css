@@ -1,0 +1,94 @@
+
+/* Cursor */
+.curPointer{
+    cursor:pointer;
+}
+
+
+/* Size percent */
+.wiSiPe4{
+    width: 4% !important;
+}
+.heSiPe100{
+    height: 100% !important;
+}
+
+.wiSiPe100{
+    width: 100% !important;
+}
+/* Size Px */
+.wiSiPx100{
+    width: 100px !important;
+}
+
+.heSiPx100{
+    height: 100px !important;
+}
+
+
+/* text color  Start*/
+
+.textWhite{
+    color: white !important;
+}
+.textBlack{
+    color: black !important;
+}
+/* text color END */
+
+/* Margin TOP Start*/
+
+.maToPx5{
+    margin-top: 5px;
+}
+.maLePx5
+{
+    margin-left: 5px;
+}
+.maToPx15{
+    margin-top: 15px;
+}
+
+/* Margin TOP  END */ 
+
+/* Other */
+
+
+.tableDropMe { /* Acılır menülerin arkasındaki paneli kaldırır ve biraz daha butona yakın bölgeden acılmasını sağlar */
+    border: 0 !important;
+    box-shadow: 0 0 rgb(0 0 0) !important;
+    background-color: transparent !important;
+    transform: translate3d(0px, 28px, 0px) !important;
+}
+
+
+
+/* checkbox'lar için daha büyük ve renkli */
+
+INPUT[type=checkbox]:focus
+{
+    outline: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+INPUT[type=checkbox]
+{
+    background-color: #DDD;
+    border-radius: 2px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    width: 17px;
+    height: 17px;
+    cursor: pointer;
+    position: relative; 
+}
+
+INPUT[type=checkbox]:checked
+{
+    background-color: #409fd6;
+    background: #409fd6 url("data:image/gif;base64,R0lGODlhCwAKAIABAP////3cnSH5BAEKAAEALAAAAAALAAoAAAIUjH+AC73WHIsw0UCjglraO20PNhYAOw==") 3px 3px no-repeat;
+}
+
+
+
+ 

@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TURNİKE</title>
+    <meta name="Description" content=" FRONTEND:Hüseyin Asiltürk, 
+    BACKEND:@pytz0ne">
+    <meta name="msapplication-TileColor" content="#386CC1">
+    <meta name="theme-color" content="#164391">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="node_modules/admin-lte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="node_modules/admin-lte/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+    <link rel="stylesheet" href="node_modules/admin-lte/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+    <link rel="stylesheet" href="node_modules/admin-lte/plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+     <link rel="stylesheet" href="node_modules/admin-lte/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="me/css/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <!-- jQuery -->
+    <script src="node_modules/admin-lte/plugins/jquery/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    
+    <style>
+        #footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            /* Height of the footer*/
+            height: 50px;
+
+        } 
+        #nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            /* Height of the footer*/
+
+        } 
+        .bildirim {
+            margin-right: 100px;
+        }
+    </style>
+</head> 
+
+<body class="hold-transition layout-top-nav {{ isset($themeMode) ? $themeMode->body : ' ' }}">
+    <div class="wrapper">
+
+        <nav id="nav" class="main-header navbar navbar-expand navbar-white"> 
+            <a style="width:25%;" alt=""> TURNİKE </a>
+
+            <a onclick="kapiAc()" class="btn btn-app bg-success">
+                <i class="fas fa-download"></i> İçeri
+            </a>
+            <a onclick="kapiKapat()" class="btn btn-app bg-danger">
+                <i class="fas fa-upload"></i> Dışarı
+            </a>
+ 
+            <ul class="navbar-nav ml-auto"> 
+                <li class="nav-item dropdown">
+                    <a class="nav-link" id="bildirimLer" data-toggle="dropdown" href="#">
+                        <i class="far fa-bell"></i>
+                        <span class="badge badge-warning navbar-badge bildirimSayisi">*</span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                        <span class="dropdown-item dropdown-header">Son <span class="bildirimSayisi">0</span> İşlem
+                            Listeleniyor</span>
+                        <div id="sonOn">
+
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </a>
+                </li> 
+            </ul>
+        </nav> 
+        <div class="content-wrapper"> 
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a
+                                        href="https://www.huseyinasilturk.com.tr/">Hüseyin ASİLTÜRK</a></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="card">
+                        <div class="card-header border-0">
+                            <div class="d-flex justify-content-between">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12 col-lg-3 offset-0 offset-lg-1">
+                                    <div class="card card-primary card-outline">
+                                        <div class="card-header">
+                                            <h5 class="card-title m-0">Yeni Kullanıcı Ekle</h5>
+                                        </div>
+                                        <div id="tanimsizKullanici">
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label>Personel Adı</label>
+                                                <input type="text" id="kaydet_personelAdi" class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>RFID</label>
+                                                <input type="text" id="personelRFID" class="form-control">
+                                            </div>
+                                            <button type="button" onclick="kullaniciKaydet()"
+                                                class="btn btn-block btn-outline-success btn-sm col-6 offset-3">Kaydet</button>
+                                        </div>
+                                    </div>
+                                    <div class="card card-primary card-outline" id="div_kulDuzenle"
+                                        style="display: none;">
+                                        <div class="card-header">
+                                            <div class="alert alert-warning alert-dismissible text-center">
+                                                <button type="button" class="close"
+                                                    onclick="$('#div_kulDuzenle').hide()">×</button>
+                                                Aşağıdaki kullanıcıyı düzenliyorsunuz. Onayladıktan sonra bu işlem geri
+                                                alınamaz
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label>ID</label>
+                                                <input type="text" disabled id="duzenle_personelID"
+                                                    class="form-control">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>Personel Adı</label>
+                                                <input type="text" id="duzenle_personelAdi" class="form-control">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>RFID</label>
+                                                <input type="text" id="duzenle_RFID" class="form-control">
+
+
+                                            </div>
+                                            <button type="button" onclick="duzenle_personel()"
+                                                class="btn btn-block btn-outline-success btn-sm col-6 offset-3">Düzenle</button>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-12 col-lg-7">
+                                    <div class="card card-primary card-outline">
+                                        <div class="card-header">
+                                            <h5 class="card-title m-0">Personel Çalışma</h5>
+                                        </div>
+                                        <div class="card-body col-12 col-lg-10 offset-0 offset-lg-1 "
+                                            style="padding: 5px;">
+                                            <div class="d-flex">
+
+
+                                            </div>
+                                            <div class="form-group row col-12 ">
+                                                <label for="inputEmail3" class="col-sm-4 col-form-label">Personel Seçin
+                                                    :</label>
+                                                <div class="col-sm-8 personelListesi">
+
+                                                </div>
+
+                                                <label for="inputEmail3" style="margin-top: 35px "
+                                                    class="col-sm-4 col-form-label">1- Tarih</label>
+                                                <div class="col-sm-8" style="  margin-top: 35px ">
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="basic-addon1"> <input
+                                                                    onchange="birinciTarihAc(this)"
+                                                                    id="birinciTarihCheck" type="checkbox"
+                                                                    aria-label="Checkbox for following text input">
+                                                            </span>
+                                                        </div>
+                                                        <input type="date" id="gundenBeri" class="form-control"
+                                                            name="gundenBeri" disabled placeholder="Username"
+                                                            aria-label="Username" aria-describedby="basic-addon1">
+                                                    </div>
+                                                </div>
+                                                <label for="inputEmail3" style="margin-top: 5px"
+                                                    class="col-sm-4 col-form-label">2- Tarih</label>
+                                                <div class="col-sm-8" style="margin-top: 5px; margin-bottom: 35px ">
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="basic-addon1"> <input
+                                                                    onchange="ikinciTarihAc(this)" id="ikinciTarihCheck"
+                                                                    type="checkbox"
+                                                                    aria-label="Checkbox for following text input">
+                                                            </span>
+                                                        </div>
+                                                        <input type="date" id="ikinciTarih" class="form-control"
+                                                            disabled placeholder="Username" aria-label="Username"
+                                                            aria-describedby="basic-addon1">
+                                                    </div>
+                                                </div>
+                                                    <div class="btn-group col-12 col-lg-6 offset-0 offset-lg-3">
+                                                        <button type="button"
+                                                            class="btn btn-default dropdown-toggle dropdown-icon"
+                                                            data-toggle="dropdown" aria-expanded="false"
+                                                            class="btn btn-default">Getirme Tercihleri *--*</button>
+
+                                                        <div class="dropdown-menu" role="menu">
+
+                                                            <a type="button"class="dropdown-item" onclick="kullaniciGetir()" data-card-widget="card-refresh" data-source="index.html" data-source-selector="#card-refresh-content" data-load-on-init="false" class="dropdown-item"
+                                                            class="cursor: pointer">Seçili Personeli Getir</a> 
+                                                            <a onclick="tumListe()" data-card-widget="card-refresh" data-source="index.html" data-source-selector="#card-refresh-content" data-load-on-init="false" class="dropdown-item"
+                                                                style="cursor: pointer;">Tüm Personellerin Girişleri</a>
+                                                            <a onclick="mesaiHesap()" data-card-widget="card-refresh" data-source="index.html" data-source-selector="#card-refresh-content" data-load-on-init="false" class="dropdown-item" class="dropdown-item"
+                                                                style="cursor: pointer;">Tüm Personellerin Mesai Hesap</a>
+
+                                                            <div class="dropdown-divider"></div> <a
+                                                                onclick="kullanniciDuzenle()" class="dropdown-item"
+                                                                style="cursor: pointer;">Seçimi Düzenle</a>
+                                                            <a class="dropdown-item" style="cursor: pointer;"
+                                                                onclick="kullaniciSil()"">Seçimi Sil</a>
+                                                              
+                                                            </div>
+                                                          </div>
+ 
+
+                                                <div class=" direct-chat-text col-11 icerde"
+                                                                style="margin-top: 15px;margin-bottom: 15px">
+                                                                Lütfen Personel Seçiniz
+                                                        </div>
+                                                        <div class="container mobilLeft" id="div_tekPersonel"
+                                                            style="display: none;overflow: visible;">
+                                                            <table id="tbl_personelGirdiCikti"
+                                                                class="table table-bordered table-hover table-striped"
+                                                                style="background-color: white;">
+                                                                <thead class="">
+                                                                    <tr>
+                                                                        <th>Giriş Tarihi</th>
+                                                                        <th>Giriş Saati</th>
+                                                                        <th>Çıkış Tarihi</th>
+                                                                        <th>Çıkış Saati</th>
+                                                                        <th>İçerde Kalınan Süre</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th></th>
+                                                                        <th></th>
+                                                                        <th></th>
+                                                                        <th style="text-align:right">Total:</th>
+                                                                        <th></th>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                        <div class="container mobilLeft" id="div_tumPersoneller">
+                                                            <table id="tbl_tumPersonelGirdiCikti"
+                                                                class="table table-bordered table-hover  table-striped"
+                                                                style="background-color: white;">
+                                                                <thead class="">
+                                                                    <tr>
+                                                                        <th>Personel Adı</th>
+                                                                        <th>Rfid</th>
+                                                                        <th>Toplam Süre</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div class="container mobilLeft" id="div_tumMesailer"
+                                                            style="display: none;overflow: visible;">
+                                                            <table id="tbl_tumMesailer"
+                                                                class="table table-bordered table-hover  table-striped"
+                                                                style="background-color: white;">
+                                                                <thead class="">
+                                                                    <tr>
+                                                                        <th>Personel Adı</th>
+                                                                        <th>Tarhi</th>
+                                                                        <th>Mesai Başlama</th>
+                                                                        <th>Mesai Bitiş</th>
+                                                                        <th>Toplam Süre</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                            </table>
+                                                        </div>
+
+                                                        <div class="container mobilLeft" id="div_tumListe"
+                                                            style="display: none; overflow-x: auto;">
+                                                            <table id="tbl_tumListe"
+                                                                class="table table-bordered table-hover table-striped"
+                                                                style="background-color: white;">
+                                                                <thead class="">
+                                                                    <tr>
+                                                                        <th>Personel Adı</th>
+                                                                        <th>Giriş Tarihi</th>
+                                                                        <th>Giriş Saati</th>
+                                                                        <th>Çıkış Tarihi</th>
+                                                                        <th>Çıkış Saati</th>
+                                                                        <th>İçerde Kalınan Süre</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                </tbody>
+                                                            </table>
+                                                         </div>
+
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <aside class="control-sidebar {{ isset($themeMode) ? $themeMode->aside : 'control-sidebar-light' }}">
+
+                </aside>
+                <footer id="footer" class="main-footer">
+                    <strong class="float-right"><a href="https://github.com/huseyinasilturk">Powered by @HüseyinASİLTÜRK</a>.
+                    </strong>
+                    <strong><a href="https://github.com/pytz0ne">@pytz0ne</a>.
+                    </strong>
+                </footer>
+            </div>
+            <div class="bildirim_muzik" style="display:none"></div>
+
+
+
+
+
+            <!-- Bootstrap 4 -->
+            <script src="node_modules/admin-lte/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+            <!-- AdminLTE App -->
+            <script src="node_modules/admin-lte/plugins/datatables/jquery.dataTables.min.js"></script>
+            <script src="node_modules/admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+            <script src="node_modules/admin-lte/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+            <script src="node_modules/admin-lte/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+            <script src="node_modules/admin-lte/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+            <script src="node_modules/admin-lte/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+            <script src="node_modules/admin-lte/plugins/jszip/jszip.min.js"></script>
+            <script src="node_modules/admin-lte/plugins/pdfmake/pdfmake.min.js"></script>
+            <script src="node_modules/admin-lte/plugins/pdfmake/vfs_fonts.js"></script>
+            <script src="node_modules/admin-lte/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+            <script src="node_modules/admin-lte/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+            <script src="node_modules/admin-lte/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+            <script src="node_modules/admin-lte/dist/js/adminlte.min.js"></script>
+            <script src="me/js/cookie.js"></script>
+            <script src="me/js/me.js"></script>
+            <script src="me/js/signalr.min.js"></script>
+            <!-- AdminLTE for demo purposes -->
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+            <script src="https://cdn.datatables.net/datetime/1.1.0/js/dataTables.dateTime.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/push.js/1.0.8/push.min.js"></script>
+
+
+            <script>
+                //GÜN İNPUTLARI İÇİN İLK A.ILDIGINDA BUGUNÜ GETİRMEK İÇİN GEREKLİ KODLAMALAR BAŞLANGIÇ
+                var now = new Date();
+                var month = (now.getMonth() + 1);
+                var day = now.getDate();
+                if (month < 10)
+                    month = "0" + month;
+                if (day < 10)
+                    day = "0" + day;
+                var today = now.getFullYear() + '-' + month + '-' + day;
+
+                $("input[type='date']").val(today);
+
+                //GÜN İNPUTLARI İÇİN İLK A.ILDIGINDA BUGUNÜ GETİRMEK İÇİN GEREKLİ KODLAMALAR BAŞLANGIÇ
+
+                //PERSONEL KISMINDA YER ALAN TARİH FİLİTRELERİNİN AÇLIP AÇILMAMASI BAŞLANGIÇ 
+
+                //1. TARİH
+                function ikinciTarihAc(secim) {
+                    if ($(secim).prop("checked")) {
+                        $("#ikinciTarih").prop('disabled', false);
+                    } else {
+                        $("#ikinciTarih").prop('disabled', true);
+                    }
+                }
+                //2.TARİH
+                function birinciTarihAc(secim) {
+                    if ($(secim).prop("checked")) {
+                        $("#gundenBeri").prop('disabled', false);
+                    } else {
+                        $("#gundenBeri").prop('disabled', true);
+                    }
+                }
+
+                //PERSONEL KISMINDA YER ALAN TARİH FİLİTRELERİNİN AÇLIP AÇILMAMASI BİTİŞ
+
+                //SİGNAL R
+                let connection = new signalR.HubConnectionBuilder()
+                    .withUrl("http://webapi/hubs")
+                    .withAutomaticReconnect()
+                    .build();
+
+                connection.on("userNotFound", data => {
+                    console.log("userNotFound---", data);
+                    son20Islem(data, "2");
+                    $("#personelRFID").val(data);
+                    Push.create('DİKKATTTT !!! İZİNSİZ DENEME  = ' + data);
+
+                    $("#tanimsizKullanici").html('<div class="alert alert-warning alert-dismissible">' +
+                        '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>' +
+                        '<h5><i class="icon fas fa-exclamation-triangle"></i> Dikkat!</h5>' +
+                        'Tanımsız Kullanıcı İçin {{!! ' + data +
+                        '!!}} RFID Oluşturuldu Lütfen Kullanıcıyı Ekleyin' +
+                        '</div>');
+                });
+                connection.on("userEnter", data => {
+                    var data2 = JSON.parse(data);
+                    son20Islem(data2.Name,
+                        ""
+                        ); //SON İŞLEM FONKSİYONU SAYESİNDE HEM SAĞ ÜSTE AÇILIR BİLDİRİM VERİYOR HEMDE SAĞ ÜSTTEKİ BİLDİRİMLER KISMINA YENİ GİRİŞİ EKLİYORUZ
+                    Push.create('Personel Giriş Yaptı = ' + data2
+                        .Name); //BİLDİRİM ATIYORUZ //HTTPS OLMAZ İSE ÇALIŞMIYOR.
+
+                });
+                //TURNİKEDEN GİRİŞ YAPAN OLURSA ÇALIŞAN FONKSİYON
+                connection.on("userLeave", data => {
+                    var data2 = JSON.parse(data); //VERİYİ JSON DAN AYIRIYORUZ
+                    son20Islem(data2.Name,
+                        "1"
+                        ); //SON İŞLEM FONKSİYONU SAYESİNDE HEM SAĞ ÜSTE AÇILIR BİLDİRİM VERİYOR HEMDE SAĞ ÜSTTEKİ BİLDİRİMLER KISMINA YENİ GİRİŞİ EKLİYORUZ
+                    Push.create('Personel Çıkış Yaptı = ' + data2
+                        .Name); //BİLDİRİM ATIYORUZ //HTTPS OLMAZ İSE ÇALIŞMIYOR.
+
+                });
+                connection.start()
+                    .then(async ax => {})
+                    .catch(err => {
+                        console.log('err :>> ', err);
+                    })
+                //SİGNAL R
+
+
+                var bildirimUzunlugu = 0;
+
+                function son20Islem(personelAdi, islem) {
+                    $("#bildirimLer").addClass(
+                        "animate__animated animate__heartBeat"); //SAĞ ÜSTEKİ BİLDİRİM İCONUNUN ANİMASYONU İÇİN
+                    setTimeout(animasyonSil,
+                        2000
+                        ); //ANİMASYONUN TEKRAR ÇALIŞMASI İÇİN İÇİNDEKİ CLASSLARI 2 SANİYE SONRA TEKRAR TEMİZYEN FONKSİYON
+                    setTimeout(bildirimAnimasyonSil, 10000); // AÇILAN BİLDİRİM PANELİNİ 10SN SONRA YOK EDEN FONKSİYON
+                    bildirimClass = "";
+                    bildirimUzunlugu++;
+
+                    var islemText = ""; //SAĞ ÜST AÇILAN BİLDİRİM İÇERİĞİ BAŞLANGIÇ
+                    if (islem == 1) {
+                        title = "Personel " + personelAdi + " Çıkış Yaptı";
+                        islemText = "Çıkış Yaptı : ";
+                        bildirimClass = "bg-warning bildirim";
+                    } else if (islem == 0) {
+                        title = "Personel  " + personelAdi + "  Giriş Yaptı";
+                        islemText = "Giriş Yaptı : ";
+                        bildirimClass = "bg-success bildirim";
+                    } else {
+                        title = personelAdi + " İzinsiz Deneme";
+                        islemText = "İzinsiz Deneme : ";
+                        bildirimClass = "bg-error bildirim";
+
+                    } //SAĞ ÜST AÇILAN BİLDİRİM İÇERİĞİ BİTİŞ
+                    simdikiZamani = simdikiZaman(); //BİLDİRİM İÇERİĞİNDE ZAMAN İÇİN
+                    $(".bildirimSayisi").html(bildirimUzunlugu);
+                    var islem =
+                        '<div class="dropdown-divider" style="margin-buttom:15px;margin-top:15px"></div><a href="#" class="dropdown-item"><i class="fas fa-users mr-2"></i>' +
+                        personelAdi + '<span class="float-right text-muted text-sm">' + islemText + "  " +
+                        simdikiZamani +
+                        '</span></a>';
+                    $("#sonOn").prepend(islem); //BİLDİRİM ALANINA EKLEME
+
+                    $(document).Toasts('create', { //AÇILIR BİLDİRİM ÇALIŞTIRMA ()
+                        class: bildirimClass,
+                        title: 'Dikkat                      -',
+                        subtitle: simdikiZamani,
+                        body: title
+                    })
+                }
+
+                function simdikiZaman() { //BUGÜNÜ STRİNG OLARAK DÖNDÜREN FONSİYON BAŞLANGIÇ
+                    let date_ob = new Date();
+
+                    // adjust 0 before single digit date
+                    let date = ("0" + date_ob.getDate()).slice(-2);
+
+                    // current month
+                    let month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+
+                    // current year
+                    let year = date_ob.getFullYear();
+
+                    // current hours
+                    let hours = date_ob.getHours();
+
+                    // current minutes
+                    let minutes = date_ob.getMinutes();
+
+                    // current seconds
+                    let seconds = date_ob.getSeconds();
+                    return year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+                } //BUGÜNÜ STRİNG OLARAK DÖNDÜREN FONSİYON BAŞLANGIÇ
+
+
+
+
+                // .then(() => connection.invoke("RefreshData", "Hello"));
+
+                //DATATABLE CONFİG
+
+                //TEK BİR PERSONELİN GİRDİ ÇIKTISINI GÖSTER TABLO (getir butonuna basınca gelen tablo) BAŞLANGIÇ
+                $(function () {
+                    $("#tbl_personelGirdiCikti").DataTable({
+                        "footerCallback": function (row, data, start, end, display) {
+                            var api = this.api(),
+                                data;
+                            // Total over all pages
+                            total_ID = api.column(0).data().reduce(function (a, b) {
+                                return ~~a + ~~b;
+                            }, 0);
+                            total_Duration = api.column(4).data().reduce(function (a, b) {
+                                return moment.duration(a).asMilliseconds() + moment
+                                    .duration(b)
+                                    .asMilliseconds();
+                            }, 0);
+                            // Total over this page
+                            pageTotal_ID = api.column(0, {
+                                page: 'current'
+                            }).data().reduce(function (a, b) {
+                                return ~~a + ~~b;
+                            }, 0);
+                            pageTotal_Duration = api.column(4, {
+                                page: 'current'
+                            }).data().reduce(function (a, b) {
+                                return moment.duration(a).asMilliseconds() + moment
+                                    .duration(b)
+                                    .asMilliseconds();
+                            }, 0);
+                            // Update footer Column "quantita"
+
+                            $(api.column(4).footer()).html(
+                                moment.utc(total_Duration).format("HH:mm:ss")
+                            );
+                        },
+                        "paging": true,
+                        "order": [[ 3, "desc" ]],
+                        "dom": 'Bfrtip',
+                        "lengthChange": false,
+                        "searching": true,
+                        "scrollX": true,
+                        "ordering": true,
+                        "info": true,
+                        "language": {
+                            "url": "datatableTR.json"
+                        },
+                        "lengthMenu": [
+                            [10, 25, 50, -1],
+                            [10, 25, 50, "All"]
+                        ],
+                        "autoWidth": false,
+                        "responsive": true,
+                        "lengthChange": false,
+                        "autoWidth": false,
+                        "buttons": [{
+                                extend: 'copyHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    personelAdi = $("#kullanicilar").find("option:selected")
+                                        .text();
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 + ' Tarihine kadar tüm giriş çıkışları';
+
+                                }
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    personelAdi = $("#kullanicilar").find("option:selected")
+                                        .text();
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 + ' Tarihine kadar tüm giriş çıkışları';
+
+                                }
+                            },
+                            {
+                                extend: 'csvHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    personelAdi = $("#kullanicilar").find("option:selected")
+                                        .text();
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 + ' Tarihine kadar tüm giriş çıkışları';
+
+                                }
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    personelAdi = $("#kullanicilar").find("option:selected")
+                                        .text();
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+                                    return personelAdi + " Personelinin" + tarih +
+                                        " tarihinden -- " + tarih2 +
+                                        ' Tarihine kadar tüm giriş çıkışları';
+
+                                }
+                            }
+                        ]
+                    }).buttons().container().appendTo('#tbl_personelGirdiCikti .col-md-6:eq(0)');
+
+                });
+                //TEK BİR PERSONELİN GİRDİ ÇIKTISINI GÖSTER TABLO (getir butonuna basınca gelen tablo) BİTİŞ
+            </script>
+
+            <script>
+                //TÜM PERSONELİN GİRDİ ÇIKTISINI GÖSTER TABLO (tam liste butonuna basınca gelen tablo) BAŞLANGIÇ
+                $(function () {
+                    $("#tbl_tumPersonelGirdiCikti").DataTable({
+                        "paging": true,
+                        "dom": 'Bfrtip',
+                        "lengthChange": false,
+                        "searching": true,
+                        "ordering": true,
+                        "info": true,
+                        "scrollX": true,
+                        "autoWidth": false,
+                        "responsive": true,
+                        "lengthChange": false,
+                        "autoWidth": false,
+                        "lengthMenu": [
+                            [10, 25, 50, -1],
+                            [10, 25, 50, "All"]
+                        ],
+                        "language": {
+                            "url": "datatableTR.json"
+                        },
+                        "buttons": [{
+                                extend: 'copyHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    personelAdi = $("#kullanicilar").find("option:selected")
+                                        .text();
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 + ' Tarihine kadar tüm giriş çıkışları';
+
+                                }
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    personelAdi = $("#kullanicilar").find("option:selected")
+                                        .text();
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 + ' Tarihine kadar tüm giriş çıkışları';
+
+                                }
+                            },
+                            {
+                                extend: 'csvHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    personelAdi = $("#kullanicilar").find("option:selected")
+                                        .text();
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 + ' Tarihine kadar tüm giriş çıkışları';
+
+                                }
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 +
+                                        ' Tarihine kadar tüm giriş çıkış saatlerinin toplamı';
+
+                                }
+                            }
+                        ]
+                    }).buttons().container().appendTo('#tbl_personelGirdiCikti .col-md-6:eq(0)');
+
+                });
+                //TÜM PERSONELİN GİRDİ ÇIKTISINI GÖSTER TABLO (tam liste butonuna basınca gelen tablo) BİTİŞ
+            </script>
+
+            <script>
+                //TÜM PERSONELİN GÜN BAZLI MESAİSİNİ GÖSTER TABLO (mesai hesap butonuna basınca gelen tablo) BAŞLANGIÇ
+
+                $(function () {
+                    $("#tbl_tumMesailer").DataTable({
+                        "paging": true,
+                        "dom": 'Bfrtip',
+                        "lengthChange": false,
+                        "searching": true,
+                        "ordering": true,
+                        "info": true,
+                        "scrollX": true,
+                        "autoWidth": false,
+                        "responsive": true,
+                        "lengthChange": false,
+                        "autoWidth": false,
+                        "lengthMenu": [
+                            [10, 25, 50, -1],
+                            [10, 25, 50, "All"]
+                        ],
+                        "language": {
+                            "url": "datatableTR.json"
+                        },
+                        "buttons": [{
+                                extend: 'copyHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    personelAdi = $("#kullanicilar").find("option:selected")
+                                        .text();
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 + ' Tarihine kadar tüm giriş çıkışları';
+
+                                }
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    personelAdi = $("#kullanicilar").find("option:selected")
+                                        .text();
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 + ' Tarihine kadar tüm giriş çıkışları';
+
+                                }
+                            },
+                            {
+                                extend: 'csvHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    personelAdi = $("#kullanicilar").find("option:selected")
+                                        .text();
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 + ' Tarihine kadar tüm giriş çıkışları';
+
+                                }
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 +
+                                        ' Tarihine kadar tüm giriş çıkış saatlerinin toplamı';
+
+                                }
+                            }
+                        ]
+                    }).buttons().container().appendTo('#tbl_personelGirdiCikti .col-md-6:eq(0)');
+                    //TÜM PERSONELİN GÜN BAZLI MESAİSİNİ GÖSTER TABLO (mesai hesap butonuna basınca gelen tablo) bitiş
+
+                });
+            </script>
+            <script>
+                //TÜM PERSONELİN TÜM girdi çıktısını GÖSTER TABLO (personel ekranından tüm personelleri seçilip getire basınca gelen  tablo) BAŞLANGIÇ
+
+                $(function () {
+                    $("#tbl_tumListe").DataTable({
+                        "paging": true,
+                        "dom": 'Bfrtip',
+                        "lengthChange": false,
+                        "searching": true,
+                        "ordering": true,
+                        "info": true,
+                        "scrollX": true,
+                        "autoWidth": false,
+                        "responsive": true,
+                        "lengthChange": false,
+                        'pageLength': 10,
+                        "lengthChange": true,
+                        'lengthMenu': [
+                            [10, 20, 25, 50, -1],
+                            [10, 20, 25, 50, 'All']
+                        ],
+                        "autoWidth": false,
+                        "language": {
+                            "url": "datatableTR.json"
+                        },
+                        "buttons": [{
+                                extend: 'copyHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    personelAdi = $("#kullanicilar").find("option:selected")
+                                        .text();
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 + ' Tarihine kadar tüm giriş çıkışları';
+
+                                }
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    personelAdi = $("#kullanicilar").find("option:selected")
+                                        .text();
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 + ' Tarihine kadar tüm giriş çıkışları';
+
+                                }
+                            },
+                            {
+                                extend: 'csvHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    personelAdi = $("#kullanicilar").find("option:selected")
+                                        .text();
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 + ' Tarihine kadar tüm giriş çıkışları';
+
+                                }
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                footer: true,
+                                messageTop: function () {
+                                    personelAdi = $("#kullanicilar").find("option:selected")
+                                        .text();
+                                    tarih = $("#gundenBeri").val();
+                                    tarih2 = $("#ikinciTarih").val();
+
+                                    return tarih + " tarihinden -- " +
+                                        tarih2 + ' Tarihine kadar tüm giriş çıkışları';
+
+                                }
+                            }
+                        ]
+                    }).buttons().container().appendTo('#tbl_personelGirdiCikti .col-md-6:eq(0)');
+
+                });
+                //TÜM PERSONELİN TÜM girdi çıktısını GÖSTER TABLO (personel ekranından tüm personelleri seçilip getire basınca gelen  tablo) BAŞLANGIÇ
+            </script>
+            <script>
+                function kapiAc() {
+                    $.ajax({
+                        url: 'http://10.0.10.3/api/Event/forceOpen',
+                        type: 'POST',
+                        data: {},
+                        success: function (data) {
+
+                        }
+                    });
+
+                }
+
+                function kapiKapat() {
+                    $.ajax({
+                        url: 'http://10.0.10.3/api/Event/forceClose',
+                        type: 'POST',
+                        data: {},
+                        success: function (data) {
+
+                        }
+                    });
+
+                }
+
+                function kullaniciKaydet() {
+                    var personelAdi = $("#kaydet_personelAdi").val();
+                    var RFID = $("#personelRFID").val();
+                    swal({
+                            title: "Emin Misin?",
+                            text: RFID + "' Personel Kartı " + personelAdi + " personeli adına kaydedilecektir.!",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        })
+                        .then((willDelete) => {
+                            if (willDelete) {
+                                $.ajax({
+                                    url: 'http://webapi/api/User',
+                                    type: 'POST',
+                                    data: {
+                                        name: personelAdi,
+                                        rfid: RFID
+                                    },
+                                    beforeSend: function () {
+
+                                    },
+                                    success: function (data) {
+                                        swal({
+                                                text: "Tabrikler Kart Tanımlandı!",
+                                                icon: "success",
+                                            })
+                                            .then((value) => {
+
+                                                window.location.reload(1);
+
+                                            });
+                                    }
+                                });
+                            } else {
+                                swal("Kaydetmekten Vazgeçtin!");
+                            }
+                        });
+                }
+
+                //TÜM KULLANICILARI SELECT İÇERİSİNE YERLEŞTİREN KOD BAŞlANGIÇ
+
+                $.ajax({
+                    url: 'http://webapi/api/User',
+                    type: 'GET',
+                    success: function (data) {
+                        var personelList = "";
+                        var liste =
+                            '<select  id="kullanicilar" class="custom-select btn-secondary"> <option value="0">TÜMÜ</option>';
+                        jQuery.each(data, function (i, val) {
+                            personelList += '<option rfid="' + val.rfid + '" value="' + val.id +
+                                '">' + val
+                                .name + '</option>';
+                        });
+                        liste += personelList;
+                        liste += "</select>";
+                        $(".personelListesi").html(liste);
+                    }
+                });
+
+                //TÜM KULLANICILARI SELECT İÇERİSİNE YERLEŞTİREN KOD BİTİŞ
+            </script>
+
+            <script>
+                var duzenle_ID;
+                //KULLANICI DÜZENLEME BAŞLA;
+                function kullanniciDuzenle() {
+                    //SEÇİLEN PERSONEL BİLGİLERİNİ ALMA
+                    personelAdi = $("#kullanicilar").find("option:selected").text();
+                    duzenle_ID = $("#kullanicilar").find("option:selected").val();
+                    rfid = $("#kullanicilar").find("option:selected").attr("rfid");
+
+                    if (personelAdi == "TÜMÜ") { //SEÇİLEN PERSONEL KONTROLU
+                        swal("Heyy!", "...Lütfen önce bir personel seç!");
+                        $("#div_kulDuzenle").hide();
+                    } else {
+                        //SEÇİLEN PERSONEL BİLGİLERİNİ GEREKLİ DÜZENLEME EKRANINA YAZMA VE EKRANI ANİMASYONLU BİR BİÇİNDE DÜZENLEME
+                        $("#duzenle_personelAdi").val(personelAdi);
+                        $("#duzenle_RFID").val(rfid);
+                        $("#duzenle_personelID").val(duzenle_ID);
+                        $("#div_kulDuzenle").addClass("animate__animated animate__tada");
+                        $("#div_kulDuzenle").show();
+                        setTimeout(animasyonSil,
+                            2000); //ANİMASYONUN TEKRAR ACILMASI İÇİN 2 SN SONRA ANİMASYON CLASSLARININ SİLİNMESİ
+
+                    }
+                }
+                //KULLANICI DÜZENLEME BİTİŞ;
+
+                //BAZI ANİMASYONLARIN TERKAR ÇALIŞMASI İÇİN 2SN SONRA LİSTEDEN SİLİNMESİ İÇİN YAZILAN YER SANİYEYİ SİLİNmesi istenen yerde başlayıuoruz
+                function animasyonSil() {
+                    $("#div_kulDuzenle").removeClass("animate__animated animate__tada");
+                    $("#bildirimLer").removeClass("animate__animated animate__heartBeat");
+                    clearInterval(animasyonSil); //silme işlemi bitince timer durdutyorz
+
+                }
+                //BAZI ANİMASYONLARIN TERKAR ÇALIŞMASI İÇİN 2SN SONRA LİSTEDEN SİLİNMESİ İÇİN YAZILAN YER SANİYEYİ SİLİNmesi istenen yerde başlayıuoruz
+
+                function bildirimAnimasyonSil() {
+                    clearInterval(bildirimAnimasyonSil);
+                    $(".bildirim").remove(); //divi siliyoruz ve üstte timer duruyor
+                }
+
+
+
+                //DÜZENLEME BUTONUNA BASINCA FORM BİLGİLERİNİ ALIP JSON FORMATINDA PUT YAPARAK DÜZENLEME İŞLEMİ YAPILIYOR
+                function duzenle_personel() {
+                    var personelAdi = $("#duzenle_personelAdi").val();
+                    var RFID = $("#duzenle_RFID").val();
+                    var obj = '{ "name": "' + personelAdi + '","rfid": "' + RFID + '" }';
+                    swal({
+                            title: "Personel Düzenlenecektir Onaylıyor Musunuz?",
+                            text: "Dikkat bu işlem geri alınamaz",
+                            icon: "warning",
+                            buttons: true,
+                            dangerMode: true,
+                        })
+                        .then((willDelete) => {
+                            if (willDelete) {
+                                $.ajax({
+                                    url: 'http://webapi/api/User/' + duzenle_ID,
+                                    type: 'PUT',
+                                    contentType: "application/json",
+                                    data: obj,
+                                    dataType: "json",
+                                    success: function (data) {
+                                        swal({
+                                                text: "Tabrikler Kart Tanımlandı!",
+                                                icon: "success",
+                                            })
+                                            .then((value) => {
+
+                                                window.location.reload(1);
+
+                                            });
+                                    }
+                                });
+                            } else {
+                                swal("Kaydetmekten Vazgeçtin!");
+                            }
+                        });
+                }
+                //DÜZENLEME BUTONUNA BASINCA FORM BİLGİLERİNİ ALIP JSON FORMATINDA PUT YAPARAK DÜZENLEME İŞLEMİ YAPILIYOR (BİTİŞ)
+
+                //İKİ DEFA KULLANICI UYARILARAK SİLLME İŞLEMİ YAPILIYOR
+
+                function kullaniciSil() {
+                    personelAdi = $("#kullanicilar").find("option:selected").text();
+                    ID = $("#kullanicilar").find("option:selected").val();
+                    if (personelAdi == "TÜMÜ") {
+                        swal("Heyy!", "...Lütfen önce bir personel seç!");
+                    } else
+                        swal({
+                            title: personelAdi + "Personeli Silmek İstiyorsun?",
+                            text: "Dikkat bu personel sonsuza kadar yok olacak.",
+                            buttons: true,
+                            dangerMode: true,
+                        })
+                        .then((willDelete) => {
+                            if (willDelete) {
+                                swal({
+                                        title: "Bak Siliyorum Emin Misin",
+                                        text: "Artık çok geç olabilir",
+                                        buttons: true,
+                                        dangerMode: true,
+                                    })
+                                    .then((willDelete) => {
+                                        if (willDelete) {
+                                            $.ajax({
+                                                url: 'http://webapi/api/User/' +
+                                                    ID,
+                                                type: 'DELETE',
+                                                success: function (data) {
+                                                    swal({
+                                                            text: "Kayıt Silindi!",
+                                                            icon: "success",
+                                                        })
+                                                        .then((value) => {
+                                                            window.location.reload(1);
+                                                        });
+                                                }
+                                            });
+                                        } else {
+                                            swal("Silmicen adamı niye yoruyon!");
+                                        }
+                                    });
+
+                            } else {
+                                swal("Silmekten Vazgeçtin!");
+                            }
+                        });
+                }
+                //İKİ DEFA KULLANICI UYARILARAK SİLLME İŞLEMİ BİTİŞ
+
+
+
+
+                var satirSayisi = 0;
+                var personelIcerdeSaati = 0;
+
+                function kullaniciGetir() {
+                    $('html, body').animate({scrollTop:1000},'50'); 
+                    personelAdi = $("#kullanicilar").find("option:selected").text();
+                    ID = $("#kullanicilar").find("option:selected").attr("rfid");
+                    //SEÇİM EKRANINDAN TÜM PERSONELLER SEÇİLİ DEĞİLSE BİREYSEL ŞEKİLDE PERSONELLER ÇEKİLİYOR
+                    if (personelAdi != "TÜMÜ") {
+                        $("#div_tekPersonel").show();
+                        $("#div_tumPersoneller").hide();
+                        $("#div_tumMesailer").hide();
+                        $("#div_tumListe").hide();
+                        //GEREKLİ YABLOLAR ÜST TARAFTA AÇILIYOR GEREKLİ OLMAYANLAR GİZLENİYOR.
+                        //DATA TABLEYE VERİ EKLİCEMİZ İÇİN ÖNCE TANIMLIYORUZ ASAGIDA
+                        var t = $("#tbl_personelGirdiCikti").DataTable();
+                        //KULLANICI ID Sİ LAZIM BUNU DA PERSONEL SECİM SELECTİNDEN ALIYORUM
+                        id = $("#kullanicilar").val();
+                        //TABLO DAHA ÖNE DOLMUSSA BOSALTIYORUZ ASAGIDA
+                        t.clear().draw();
+                        //FİLTRELER İÇİN AYAR SECİLİYSE YAP DEĞİLSE NULL GÖNDER GİBİ (BAŞLA)
+                        if ($("#ikinciTarihCheck").prop("checked")) {
+                            revoked = $("#ikinciTarih").val();
+                        } else {
+                            revoked = null;
+                        }
+                        if ($("#birinciTarihCheck").prop("checked")) {
+                            created = $("#gundenBeri").val();
+                        } else {
+                            created = null;
+                        }
+                        //FİLTRELER İÇİN AYAR SECİLİYSE YAP DEĞİLSE NULL GÖNDER GİBİ (BİT)
+
+
+                        //PERSONELLER ÇEKİLİYOR
+                        $.ajax({
+                            url: 'http://webapi/api/History',
+                            type: 'GET',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            data: {
+                                userid: id,
+                                created: created, //FİLİTRELEME VARSA ONA GÖRE PERSONEL ÇEKİLİOR.
+                                revoked: revoked
+                            },
+                            success: function (data) {
+                                jQuery.each(data, function (i, val) {
+                                    //ÇEKİLEN PERSONELİN GİRİŞ ÇIKIŞ SAATLARİ PARCALANIYOR VE BU SAATLARE GÖRE ÇALIŞMA SAATLERİ BULUNUYOR
+                                    giris = new Date(val.created);
+                                    girisSaati = giris.toLocaleTimeString();
+                                    girisTarihi = giris.toLocaleDateString();
+
+                                    if (val.revoked !=
+                                        undefined
+                                        ) { //CIKIŞ SAATİ YOKSA İÇERDEDİR TANIMLIYSA HESAPLAMA İÇİN CIKIS SAATİ ALINIYPR
+                                        cikis = new Date(val.revoked);
+                                        cikisSaati = cikis.toLocaleTimeString();
+                                        cikisTarihi = cikis.toLocaleDateString();
+                                        var zamanFark = Math.abs((cikis.getTime() - giris
+                                                .getTime()) /
+                                            1000);
+                                        zamanFark = secondsTimeSpanToHMS(zamanFark.toFixed(0));
+                                        clearInterval(icerdeKaldi);
+                                    } else { //CIKIŞ SAATİ YOKSA İÇERDEDİR İÇERDE İSE İÇERDE YAZILIUOR
+                                        cikisTarihi = "İceride";
+                                        cikisSaati = "İceride";
+                                        zamanFark = "İceride";
+                                        personelIcerdeSaati = giris;
+                                    }
+
+                                    //TABLOYA GEREKLİ EKLEME İŞLEMLERİ YAPILIYOR.
+                                    t.row.add([
+                                        girisTarihi,
+                                        girisSaati,
+                                        cikisTarihi,
+                                        cikisSaati,
+                                        zamanFark
+                                    ]).draw(false);
+
+
+
+                                });
+
+                                //TEKRARDAN BİR SORUN OLURSA DİYE PERSONEL İÇERDE Mİ DEĞİLMİ DİYE SORGU ÇALIŞTIRILIYOR.
+                                if ($("#tbl_personelGirdiCikti").children("tbody").children("tr")
+                                    .children("td").eq(3).html() == "İceride") {
+                                    personelIcerde(personelAdi);
+                                } else {
+                                    $.ajax({
+                                        url: "http://10.0.10.3/api/Event/status/" + ID,
+                                        type: 'GET',
+                                        success: function (data) {
+                                            console.log(data);
+                                            $(".icerde").html("Bugün " + data);
+                                        }
+                                    });
+                                }
+
+                            }
+                        });
+
+                    } else { // EĞER TÜMÜ SEÇİLİ DEĞİLSE YUKARISI ÇALIŞIYORDU TÜMÜ SEÇİLİYSE BURASI ÇALIŞIR VE HER PERSONEL İÇİN TEK TEK GET İŞLEMİ YPAILIR
+                        var tf = $("#tbl_tumPersonelGirdiCikti").DataTable();
+
+                        $("#div_tekPersonel").hide();
+                        $("#div_tumMesailer").hide();
+                        $("#div_tumPersoneller").show();
+                        personelSayisi = $("#kullanicilar").children("option")
+                            .length; //SELCT İÇERİSİNDEKİ PERSONEL SAYISI ALINIR
+
+                        for (let i = 1; i < personelSayisi; i++) { //1 DEN BAŞLAR CUNKU 0 DA TÜMÜ METNİ VAR.
+                            var zamanFark = 0;
+                            //BİRDEN BAŞLAYARAK TÜM PERSONELLERİN BİLGİLERİ ALINIR (BASLA)
+                            var personelID = $("#kullanicilar").children("option").eq(i).val();
+                            let personelAdi = $("#kullanicilar").children("option").eq(i).text();
+                            let rfid = $("#kullanicilar").children("option").eq(i).attr("rfid");
+                            //BİRDEN BAŞLAYARAK TÜM PERSONELLERİN BİLGİLERİ ALINIR (BİTİŞ)
+                            tf.clear().draw(); //DAHA ONCE DOLUYSA TEMİZLENİR.
+                            if ($("#ikinciTarihCheck").prop("checked")) {
+                                revoked = $("#ikinciTarih").val();
+                            } else {
+                                revoked = null;
+                            }
+                            if ($("#birinciTarihCheck").prop("checked")) {
+                                created = $("#gundenBeri").val();
+                            } else {
+                                created = null;
+                            } //DAHA ONCE DOLUYSA TEMİZLENİR.(BİTİŞ)
+                            //HER PERSONEL İÇİN BİREYSEL OLARAK SORGU YAPILIR
+                            $.ajax({
+                                url: 'http://webapi/api/History',
+                                type: 'GET',
+                                data: {
+                                    userid: personelID,
+                                    created: created,
+                                    revoked: revoked
+                                },
+                                success: function (data) {
+                                    //TEK PERSONEL İÇİN YAPILAN İŞLEMLERİN AYNISI YAPILIR.
+                                    var hesap = 0;
+                                    jQuery.each(data, function (i, val) {
+                                        giris = new Date(val.created);
+                                        girisSaati = giris.toLocaleTimeString();
+                                        girisTarihi = giris.toLocaleDateString();
+                                        if (val.revoked != undefined) {
+                                            cikis = new Date(val.revoked);
+                                            cikisSaati = cikis.toLocaleTimeString();
+                                            cikisTarihi = cikis.toLocaleDateString();
+                                        } else {
+                                            cikis = new Date();
+                                            cikisSaati = cikis.toLocaleTimeString();
+                                            cikisTarihi = cikis.toLocaleDateString();
+                                        }
+                                        hesap += Math.abs((cikis.getTime() - giris.getTime()) /
+                                            1000);
+                                        zamanFark = secondsTimeSpanToHMS(hesap.toFixed(0));
+                                        // console.log(zamanFark);
+                                    });
+                                    //TEK PERSONEL İÇİN YAPILAN İŞLEMLERİN AYNISI YAPILIR.
+                                    //TEK PERSONEL İÇİN YAPILAN İŞLEMLERİN AYNISI YAPILIR.(AMA TÜM TABLO YAZAN TABLO DOLDURULUR)
+
+                                    tf.row.add([
+                                        personelAdi,
+                                        girisTarihi,
+                                        zamanFark
+                                    ]).draw(false);
+                                }
+                            });
+
+
+                        }
+                    }
+                }
+
+
+                //HER PERSONELİN FİLİTREYE GÖRE MESAİSİ HESAPLANIR.
+                function mesaiHesap(params) {
+                    $('html, body').animate({scrollTop:1000},'50');
+
+                    $("#div_tekPersonel").hide();
+                    $("#div_tumPersoneller").hide();
+                    $("#div_tumListe").hide();
+                    $("#div_tumMesailer").show();
+                    $(".icerde").html("Personel Mesaileri Listeleniyor");
+                    clearInterval(icerdeKaldi);
+                    //GEREKLİ YERLER ACILIR GEREKLİ YERLER KAPANIR VARSA ANİMASYON KAPATILIR
+
+
+                    var tmsyn = $("#tbl_tumMesailer").DataTable();
+                    //TÜM MESAİLERİN LİSTELENDİĞİ TABLO TANIMLANIR
+                    personelSayisi = $("#kullanicilar").children("option").length;
+                    //TÜM PERSONEL SAYISI SELET DEN ALINIR VE TÜM PERSONEL İÇİN ATTA HESAPLAMA YAPILIR
+                    for (let i = 1; i < personelSayisi; i++) {
+                        var zamanFark = 0;
+                        //TÜM PERSONEL BİLGİLERİ ALINIR ( BAŞLA) 
+                        var personelID = $("#kullanicilar").children("option").eq(i).val();
+                        let personelAdi = $("#kullanicilar").children("option").eq(i).text();
+                        let rfid = $("#kullanicilar").children("option").eq(i).attr("rfid");
+                        //TÜM PERSONEL BİLGİLERİ ALINIR ( BİTİŞ)
+                        tmsyn.clear().draw();
+                        //TABLO DOLUYSA TEMİZLENİR
+                        //FİLİTREME İŞLEMİ İÇİN TARİHLER KONTORL EDİLİR
+                        if ($("#ikinciTarihCheck").prop("checked")) {
+                            revoked = $("#ikinciTarih").val();
+                        } else {
+                            revoked = null;
+                        }
+                        if ($("#birinciTarihCheck").prop("checked")) {
+                            created = $("#gundenBeri").val();
+                        } else {
+                            created = null;
+                        }
+
+                        //GELECEK OLAN VERİYİ GRUPLAMAK İÇİN FONSİYON OLUŞRULUR
+                        function groupBy(xs, key) {
+                            return xs.reduce(function (rv, x) {
+                                (rv[x[key]] = rv[x[key]] || []).push(x)
+                                return rv
+                            }, {})
+                        }
+
+                        $.ajax({
+                            url: 'http://webapi/api/History',
+                            type: 'GET',
+                            data: {
+                                userid: personelID,
+                                created: created,
+                                revoked: revoked
+                            },
+                            /** Data 
+                             * */
+                            success: function (data) {
+                                var hesap = 0;
+                                let eskiGiris = 0;
+                                let ilkGir = true;
+                                let eskiCikisSaati = 0;
+                                //GEŞEM VERİ DE TARİHLER BU SEFER MAP İLE PARCALANIR.
+                                data = data.map(m => {
+                                    m.created = new Date(m.created)
+                                    m.createddate = m.created.toLocaleDateString()
+                                    m.createdtime = m.created.toLocaleTimeString();
+
+                                    m.revoked = new Date(m.revoked ?? new Date())
+                                    m.revokeddate = m.revoked.toLocaleDateString()
+                                    m.revokedtime = m.revoked.toLocaleTimeString()
+                                    return m
+                                })
+                                //TARİHE GÖRE SIRALANIR
+                                let xdata = groupBy(data, "createddate")
+
+                                jQuery.each(xdata, function (i, val) {
+                                    //MESAİLER İLKİ VE SONU OLACAK ŞEKİLDE DEĞİŞKENE ALINIR
+                                    let first = val[0];
+                                    let last = val[val.length - 1];
+                                    hesap += Math.abs((first.created.getTime() - last.revoked
+                                        .getTime()) / 1000); //SANİYE BAZINDA VERİLİR
+                                    zamanFark = secondsTimeSpanToHMS(hesap.toFixed(0)); //SAAT BAZINA CEVİRİR
+
+                                    tmsyn.row.add([
+                                        personelAdi,
+                                        first.createddate,
+                                        first.createdtime,
+                                        last.revokedtime,
+                                        zamanFark
+                                    ]).draw(false); //DATATALEYE YAZILIR 
+
+                                    hesap=0;
+                                });
+
+                            }
+                        }); 
+                    } 
+                }
+
+                function tumListe() {
+                    $('html, body').animate({scrollTop:1000},'50');
+
+                    $("#div_tumListe").show();
+                    $("#div_tekPersonel").hide();
+                    $("#div_tumPersoneller").hide();
+                    $("#div_tumMesailer").hide(); 
+                    tt = $("#tbl_tumListe").DataTable();
+                    personelSayisi = $("#kullanicilar").children("option").length; 
+                    for (let i = 1; i < personelSayisi; i++) {
+                        var zamanFark = 0;
+                        var personelID = $("#kullanicilar").children("option").eq(i).val();
+                        let personelAdi = $("#kullanicilar").children("option").eq(i).text();
+                        let rfid = $("#kullanicilar").children("option").eq(i).attr("rfid");
+                        console.log(personelAdi);
+                        tt.clear().draw();
+                        if ($("#ikinciTarihCheck").prop("checked")) {
+                            revoked = $("#ikinciTarih").val();
+                        } else {
+                            revoked = null;
+                        }
+                        if ($("#birinciTarihCheck").prop("checked")) {
+                            created = $("#gundenBeri").val();
+                        } else {
+                            created = null;
+                        }
+                        $.ajax({
+                            url: 'http://webapi/api/History',
+                            type: 'GET',
+                            data: {
+                                userid: personelID,
+                                created: created,
+                                revoked: revoked
+                            },
+                            success: function (data) { 
+                                var hesap = 0;
+                                jQuery.each(data, function (i, val) {
+                                    giris = new Date(val.created);
+                                    girisSaati = giris.toLocaleTimeString();
+                                    girisTarihi = giris.toLocaleDateString();
+                                    if (val.revoked != undefined) {
+                                        cikis = new Date(val.revoked);
+                                        cikisSaati = cikis.toLocaleTimeString();
+                                        cikisTarihi = cikis.toLocaleDateString();
+                                    } else {
+                                        cikis = new Date();
+                                        cikisSaati = cikis.toLocaleTimeString();
+                                        cikisTarihi = cikis.toLocaleDateString();
+                                    }
+                                    hesap += Math.abs((cikis.getTime() - giris.getTime()) / 1000);
+                                    zamanFark = secondsTimeSpanToHMS(hesap.toFixed(0));
+                                    tt.row.add([
+                                        personelAdi,
+                                        girisTarihi,
+                                        girisSaati,
+                                        cikisTarihi,
+                                        cikisSaati,
+                                        zamanFark
+                                    ]).draw(false);
+                                });
+
+                            }
+                        });
+
+                    }
+                }
+                var icerdeKaldi;
+                //PERSONEL İÇERDE ANİMASYONU İÇİN
+                function personelIcerde(personelAdi) {
+                    icerdeKaldi = setInterval(function () {
+                        simdi = new Date();
+                        giris = personelIcerdeSaati;
+                        var zamanFark = Math.abs((simdi.getTime() - giris.getTime()) / 1000);
+                        zamanFark = secondsTimeSpanToHMS(zamanFark.toFixed(0));
+                        $(".icerde").html(personelAdi + " -> " + zamanFark + " Saattir İçerde");
+                        toplamSure = $("#tbl_personelGirdiCikti").children("tfoot").children("tr").eq(0)
+                            .children("th")
+                            .eq(4).html();
+                        console.log(toplamSure);
+                        var DatetoplamSure = new Date(toplamSure);
+
+                        console.log(DatetoplamSure); 
+                    }, 1000);
+
+                }
+                //SANİYE GELEN VERİYİ SAAT YAPAR
+                function secondsTimeSpanToHMS(s) {
+                    var h = Math.floor(s / 3600); //Get whole hours
+                    s -= h * 3600;
+                    var m = Math.floor(s / 60); //Get remaining minutes
+                    s -= m * 60;
+                    return h + ":" + (m < 10 ? '0' + m : m) + ":" + (s < 10 ? '0' + s :
+                        s); //zero padding on minutes and seconds
+                }
+            </script>
+
+
+</body>
+
+</html>
